@@ -48,3 +48,8 @@ D:\Y5 C\Desktop\21-22\.net\EternityKingdom\obj\Debug\net6.0\refint\projet.dll
 D:\Y5 C\Desktop\21-22\.net\EternityKingdom\obj\Debug\net6.0\projet.pdb
 D:\Y5 C\Desktop\21-22\.net\EternityKingdom\obj\Debug\net6.0\projet.genruntimeconfig.cache
 D:\Y5 C\Desktop\21-22\.net\EternityKingdom\obj\Debug\net6.0\ref\projet.dll
+D:\Y5 C\Desktop\21-22\.net\EternityKingdom\bin\Debug\net6.0\Autofac.dll
+D:\Y5 C\Desktop\21-22\.net\EternityKingdom\bin\Debug\net6.0\MonoGame.Extended.dll
+D:\Y5 C\Desktop\21-22\.net\EternityKingdom\bin\Debug\net6.0\MonoGame.Extended.Graphics.dll
+D:\Y5 C\Desktop\21-22\.net\EternityKingdom\bin\Debug\net6.0\MonoGame.Extended.Tiled.dll
+D:\Y5 C\Desktop\21-22\.net\EternityKingdom\bin\Debug\net6.0\Newtonsoft.Json.dll
