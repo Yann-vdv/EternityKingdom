@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Y5 C\\Desktop\\21-22\\.net\\projet\\projet.csproj": {}
+    "D:\\Y5 C\\Desktop\\21-22\\.net\\EternityKingdom\\projet.csproj": {}
   },
   "projects": {
-    "D:\\Y5 C\\Desktop\\21-22\\.net\\projet\\projet.csproj": {
+    "D:\\Y5 C\\Desktop\\21-22\\.net\\EternityKingdom\\projet.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Y5 C\\Desktop\\21-22\\.net\\projet\\projet.csproj",
+        "projectUniqueName": "D:\\Y5 C\\Desktop\\21-22\\.net\\EternityKingdom\\projet.csproj",
         "projectName": "projet",
-        "projectPath": "D:\\Y5 C\\Desktop\\21-22\\.net\\projet\\projet.csproj",
+        "projectPath": "D:\\Y5 C\\Desktop\\21-22\\.net\\EternityKingdom\\projet.csproj",
         "packagesPath": "C:\\Users\\yann5\\.nuget\\packages\\",
-        "outputPath": "D:\\Y5 C\\Desktop\\21-22\\.net\\projet\\obj\\",
+        "outputPath": "D:\\Y5 C\\Desktop\\21-22\\.net\\EternityKingdom\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\yann5\\AppData\\Roaming\\NuGet\\NuGet.Config"
