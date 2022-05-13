@@ -44,7 +44,7 @@ namespace projet.Managers
         {
             _timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (_timer < _animation.FrameSpeed)
+            if (_timer > _animation.FrameSpeed)
             {
                 _timer = 0f;
                 _animation.CurrentFrame++;

@@ -19,7 +19,7 @@ namespace projet.Models
             Texture = texture;
             FrameCount = frameCount;
             isLooping = true;
-            FrameSpeed = 0.2f;
+            FrameSpeed = 0.05f;
         }
     }
 }

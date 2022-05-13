@@ -51,50 +51,50 @@ namespace projet.Sprites
             {
                 if (Keyboard.GetState().IsKeyDown(Input.Left))
                 {
-                    Velocity.X -= 1;
+                    Velocity.X -= Speed;
                 }
                 else if (Keyboard.GetState().IsKeyDown(Input.Right))
                 {
-                    Velocity.X += 1;
+                    Velocity.X += Speed;
                 }
-                Velocity.Y -= 1;
+                Velocity.Y -= Speed;
             }
             else if (Keyboard.GetState().IsKeyDown(Input.Down))
             {
                 if (Keyboard.GetState().IsKeyDown(Input.Left))
                 {
-                    Velocity.X -= 1;
+                    Velocity.X -= Speed;
                 }
                 else if (Keyboard.GetState().IsKeyDown(Input.Right))
                 {
-                    Velocity.X += 1;
+                    Velocity.X += Speed;
                 }
-                Velocity.Y += 1;
+                Velocity.Y += Speed;
             }
             else if (Keyboard.GetState().IsKeyDown(Input.Left))
             {
                 if (Keyboard.GetState().IsKeyDown(Input.Up))
                 {
-                    Velocity.Y -= 1;
+                    Velocity.Y -= Speed;
                 }
                 else if (Keyboard.GetState().IsKeyDown(Input.Down))
                 {
-                    Velocity.Y += 1;
+                    Velocity.Y += Speed;
                 }
-                Velocity.X -= 1;
+                Velocity.X -= Speed;
                 _lastDirection = "left";
             }
             else if (Keyboard.GetState().IsKeyDown(Input.Right))
             {
                 if (Keyboard.GetState().IsKeyDown(Input.Up))
                 {
-                    Velocity.Y -= 1;
+                    Velocity.Y -= Speed;
                 }
                 else if (Keyboard.GetState().IsKeyDown(Input.Down))
                 {
-                    Velocity.Y += 1;
+                    Velocity.Y += Speed;
                 }
-                Velocity.X += 1;
+                Velocity.X += Speed;
                 _lastDirection = "right";
             }
             // else
