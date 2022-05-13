@@ -53,3 +53,8 @@ D:\Y5 C\Desktop\21-22\.net\EternityKingdom\bin\Debug\net6.0\MonoGame.Extended.dl
 D:\Y5 C\Desktop\21-22\.net\EternityKingdom\bin\Debug\net6.0\MonoGame.Extended.Graphics.dll
 D:\Y5 C\Desktop\21-22\.net\EternityKingdom\bin\Debug\net6.0\MonoGame.Extended.Tiled.dll
 D:\Y5 C\Desktop\21-22\.net\EternityKingdom\bin\Debug\net6.0\Newtonsoft.Json.dll
+D:\Y5 C\Desktop\21-22\.net\EternityKingdom\bin\Debug\net6.0\Content\grass.xnb
+D:\Y5 C\Desktop\21-22\.net\EternityKingdom\bin\Debug\net6.0\Content\Golem01\Golem_01_Walking_left_001.xnb
+D:\Y5 C\Desktop\21-22\.net\EternityKingdom\bin\Debug\net6.0\Content\Golem01\Golem_01_Walking_right_001.xnb
+D:\Y5 C\Desktop\21-22\.net\EternityKingdom\bin\Debug\net6.0\Content\Golem01\Golem_01_Attacking_Left_000.xnb
+D:\Y5 C\Desktop\21-22\.net\EternityKingdom\bin\Debug\net6.0\Content\Golem01\Golem_01_Attacking_Right_000.xnb
