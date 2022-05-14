@@ -38,7 +38,7 @@ namespace projet.Managers
         public void Stop()
         {
             _timer = 0f;
-            _animation.CurrentFrame = 3;
+            _animation.CurrentFrame = 0;
         }
         public void Update(GameTime gameTime)
         {

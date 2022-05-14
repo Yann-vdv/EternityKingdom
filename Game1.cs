@@ -38,19 +38,29 @@ namespace projet
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _FunctionGame.SpawnEnemy(TypeMobs.Golem, 10, _GamePlayInfo);
             _GamePlayInfo._GameBackground = Content.Load<Texture2D>("grass");
-            // _GamePlayInfo.j1.t2d = Content.Load<Texture2D>("Golem01/Golem_01_Walking_right_001");
 
-            var animations = new Dictionary<string, Animation>()
+            var Player1 = new Dictionary<string, Animation>()
             {
                 { "Walk_right", new Animation(Content.Load<Texture2D>("Golem01/Golem_01_Walking_right_001"), 17 ) },
                 { "Walk_left", new Animation(Content.Load<Texture2D>("Golem01/Golem_01_Walking_left_001"), 17 ) },
                 { "Attack_left", new Animation(Content.Load<Texture2D>("Golem01/Golem_01_Attacking_Left_000"), 12 ) },
                 { "Attack_right", new Animation(Content.Load<Texture2D>("Golem01/Golem_01_Attacking_Right_000"), 12 ) },
+                { "Dead_left", new Animation(Content.Load<Texture2D>("Golem01/Golem_01_Dying_Left_000"), 15 ) },
+                { "Dead_right", new Animation(Content.Load<Texture2D>("Golem01/Golem_01_Dying_Right_000"), 15 ) },
+                { "Idle_left", new Animation(Content.Load<Texture2D>("Golem01/Golem_01_Idle_Left_000"), 12 ) },
+                { "Idle_right", new Animation(Content.Load<Texture2D>("Golem01/Golem_01_Idle_Right_000"), 12 ) },
             };
+            // var animations2 = new Dictionary<string, Animation>()
+            // {
+            //     { "Walk_right", new Animation(Content.Load<Texture2D>("Golem01/Golem_01_Walking_right_001"), 17 ) },
+            //     { "Walk_left", new Animation(Content.Load<Texture2D>("Golem01/Golem_01_Walking_left_001"), 17 ) },
+            //     { "Attack_left", new Animation(Content.Load<Texture2D>("Golem01/Golem_01_Attacking_Left_000"), 12 ) },
+            //     { "Attack_right", new Animation(Content.Load<Texture2D>("Golem01/Golem_01_Attacking_Right_000"), 12 ) },
+            // };
 
             _Players = new List<Sprite>()
             {
-                new Sprite(animations)
+                new Sprite(Player1)
                 {
                     Position = new Vector2(100,100),
                     Input = new input()
@@ -62,6 +72,18 @@ namespace projet
                         Space = Keys.Space,
                     },
                 },
+                // new Sprite(animations2)
+                // {
+                //     Position = new Vector2(200,100),
+                //     Input = new input()
+                //     {
+                //         Up = Keys.Up,
+                //         Down = Keys.Down,
+                //         Left = Keys.Left,
+                //         Right = Keys.Right,
+                //         Space = Keys.RightShift,
+                //     },
+                // },
             };
 
             // TODO: use this.Content to load your game content here

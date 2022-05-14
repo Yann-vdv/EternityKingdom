@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using projet.Models;
 using projet.Managers;
 using System.Linq;
+using System;
 
 namespace projet.Sprites
 {
@@ -16,6 +17,8 @@ namespace projet.Sprites
         protected Vector2 _position;
         protected Texture2D _texture;
         protected string _lastDirection = "right";
+        protected bool isGameOver = false;
+        protected bool isDead = false;
         #endregion
 
         #region Properties
@@ -128,19 +131,14 @@ namespace projet.Sprites
             {
                 if (_lastDirection == "right")
                 {
-                    _animationManager.Play(_animations["Walk_right"]);
+                    _animationManager.Play(_animations["Idle_right"]);
                 }
                 else
                 {
-                    _animationManager.Play(_animations["Walk_left"]);
+                    _animationManager.Play(_animations["Idle_left"]);
                 }
-                _animationManager.Stop();
+                // _animationManager.Stop();
             }
-
-            // else if (Velocity.Y < 0)
-            // {
-            //     _animationManager.Play(_animations[]);
-            // }
         }
         public virtual void Attack()
         {
@@ -157,6 +155,28 @@ namespace projet.Sprites
                 }
             }
         }
+        public virtual void Die()
+        {
+            //Console.WriteLine("animatin : " + _animations["Dead_right"].Texture);
+            if (Position.X >= 400)
+            {
+                isDead = true;
+                Velocity = Vector2.Zero;
+                if (_lastDirection == "right")
+                {
+                    //for (int i = 0; i < _animations["Dead_right"].FrameCount; i++)
+                    _animationManager.Play(_animations["Dead_right"]);
+
+                }
+                else
+                {
+                    //for (int i = 0; i < _animations["Dead_left"].FrameCount; i++)
+                    _animationManager.Play(_animations["Dead_left"]);
+                }
+                if (_animations["Dead_right"].CurrentFrame == 12 || _animations["Dead_right"].CurrentFrame == 12)
+                    isGameOver = true;
+            }
+        }
         public Sprite(Dictionary<string, Animation> animations)
         {
             _animations = animations;
@@ -168,15 +188,25 @@ namespace projet.Sprites
         }
         public virtual void Update(GameTime gameTime, List<Sprite> sprites)
         {
-            Move();
+            if (!isGameOver)
+            {
+                Die();
 
-            Attack();
+                _animationManager.Update(gameTime);
 
-            setAnimation();
+                if (!isDead)
+                {
+                    Move();
 
-            _animationManager.Update(gameTime);
+                    Attack();
 
-            Position += Velocity;
+                    setAnimation();
+
+                    Position += Velocity;
+                }
+
+            }
+
             Velocity = Vector2.Zero;
         }
         #endregion
