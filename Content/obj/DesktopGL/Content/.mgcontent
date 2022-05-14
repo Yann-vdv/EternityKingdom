@@ -4,11 +4,11 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>D:/Y5 C/Desktop/21-22/.net/EternityKingdom/Content/Golem01/Golem_01_Attacking_Left_000.png</File>
-    <File>D:/Y5 C/Desktop/21-22/.net/EternityKingdom/Content/Golem01/Golem_01_Attacking_Right_000.png</File>
-    <File>D:/Y5 C/Desktop/21-22/.net/EternityKingdom/Content/Golem01/Golem_01_Walking_left_001.png</File>
-    <File>D:/Y5 C/Desktop/21-22/.net/EternityKingdom/Content/Golem01/Golem_01_Walking_right_001.png</File>
-    <File>D:/Y5 C/Desktop/21-22/.net/EternityKingdom/Content/grass.jpg</File>
+    <File>d:/Y5 C/Desktop/21-22/.net/EternityKingdom/Content/Golem01/Golem_01_Attacking_Left_000.png</File>
+    <File>d:/Y5 C/Desktop/21-22/.net/EternityKingdom/Content/Golem01/Golem_01_Attacking_Right_000.png</File>
+    <File>d:/Y5 C/Desktop/21-22/.net/EternityKingdom/Content/Golem01/Golem_01_Walking_left_001.png</File>
+    <File>d:/Y5 C/Desktop/21-22/.net/EternityKingdom/Content/Golem01/Golem_01_Walking_right_001.png</File>
+    <File>d:/Y5 C/Desktop/21-22/.net/EternityKingdom/Content/grass.jpg</File>
   </SourceFiles>
   <DestFiles>
     <File xsi:nil="true" />

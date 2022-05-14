@@ -12,15 +12,17 @@ namespace projet
         private SpriteBatch _spriteBatch;
         private FunctionGame _FunctionGame = new FunctionGame();
         private GamePlayInfo _GamePlayInfo = new GamePlayInfo();
-        private List<Sprite> _sprites;
+        private List<Sprite> _Players;
         private gameState gs = gameState.gamePlay;
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-            _graphics.PreferredBackBufferWidth = 500;
-            _graphics.PreferredBackBufferHeight = 400;
+            // _graphics.PreferredBackBufferWidth = 1920;
+            // _graphics.PreferredBackBufferHeight = 1080;
+            // _graphics.IsFullScreen = true;
+            // _graphics.ApplyChanges();
         }
 
 
@@ -46,7 +48,7 @@ namespace projet
                 { "Attack_right", new Animation(Content.Load<Texture2D>("Golem01/Golem_01_Attacking_Right_000"), 12 ) },
             };
 
-            _sprites = new List<Sprite>()
+            _Players = new List<Sprite>()
             {
                 new Sprite(animations)
                 {
@@ -59,7 +61,7 @@ namespace projet
                         Right = Keys.D,
                         Space = Keys.Space,
                     },
-                }
+                },
             };
 
             // TODO: use this.Content to load your game content here
@@ -87,8 +89,8 @@ namespace projet
             //     _GamePlayInfo.j1.co.x += 1;
             // }
 
-            foreach (var sprite in _sprites)
-                sprite.Update(gameTime, _sprites);
+            foreach (var sprite in _Players)
+                sprite.Update(gameTime, _Players);
 
             // TODO: Add your update logic here
 
@@ -121,7 +123,8 @@ namespace projet
             _spriteBatch.Begin();
             _spriteBatch.Draw(_GamePlayInfo._GameBackground, new Vector2(0, 0), Color.White);
             //_spriteBatch.Draw(_GamePlayInfo.j1.t2d, new Vector2(_GamePlayInfo.j1.co.x, _GamePlayInfo.j1.co.y), Color.White);
-            foreach (var sprite in _sprites)
+
+            foreach (var sprite in _Players)
                 sprite.Draw(_spriteBatch);
             _spriteBatch.End();
         }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>D:/Y5 C/Desktop/21-22/.net/EternityKingdom/Content/grass.jpg</SourceFile>
+  <SourceFile>d:/Y5 C/Desktop/21-22/.net/EternityKingdom/Content/grass.jpg</SourceFile>
   <SourceTime>2022-05-13T12:01:53.9355267+02:00</SourceTime>
-  <DestFile>D:/Y5 C/Desktop/21-22/.net/EternityKingdom/Content/bin/DesktopGL/Content/grass.xnb</DestFile>
-  <DestTime>2022-05-13T12:32:37.9407943+02:00</DestTime>
+  <DestFile>d:/Y5 C/Desktop/21-22/.net/EternityKingdom/Content/bin/DesktopGL/Content/grass.xnb</DestFile>
+  <DestTime>2022-05-14T09:43:14.905742+02:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2020-08-10T18:17:54+02:00</ImporterTime>
   <Processor>TextureProcessor</Processor>
