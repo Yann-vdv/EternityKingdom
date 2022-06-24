@@ -1,5 +1,4 @@
 ﻿using System;
-
 namespace projet
 {
     public static class Program

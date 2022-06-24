@@ -16,9 +16,11 @@ namespace projet.Sprites
         protected Dictionary<string, Animation> _animations;
         protected Vector2 _position;
         protected Texture2D _texture;
+        protected Joueur _joueur;
         protected string _lastDirection = "right";
         protected bool isGameOver = false;
         protected bool isDead = false;
+        protected bool isAttacking = false;
         #endregion
 
         #region Properties
@@ -55,10 +57,12 @@ namespace projet.Sprites
                 if (Keyboard.GetState().IsKeyDown(Input.Left))
                 {
                     Velocity.X -= Speed;
+                    _lastDirection = "left";
                 }
                 else if (Keyboard.GetState().IsKeyDown(Input.Right))
                 {
                     Velocity.X += Speed;
+                    _lastDirection = "right";
                 }
                 Velocity.Y -= Speed;
             }
@@ -67,10 +71,12 @@ namespace projet.Sprites
                 if (Keyboard.GetState().IsKeyDown(Input.Left))
                 {
                     Velocity.X -= Speed;
+                    _lastDirection = "left";
                 }
                 else if (Keyboard.GetState().IsKeyDown(Input.Right))
                 {
                     Velocity.X += Speed;
+                    _lastDirection = "right";
                 }
                 Velocity.Y += Speed;
             }
@@ -142,7 +148,7 @@ namespace projet.Sprites
         }
         public virtual void Attack()
         {
-            if (Keyboard.GetState().IsKeyDown(Input.Space))
+            if (Keyboard.GetState().IsKeyDown(Input.Space) && !isAttacking)
             {
                 Velocity = Vector2.Zero;
                 if (_lastDirection == "right")
@@ -153,7 +159,30 @@ namespace projet.Sprites
                 {
                     _animationManager.Play(_animations["Attack_left"]);
                 }
+                isAttacking = true;
             }
+            else if (isAttacking)
+            {
+                // Console.WriteLine(_animations["Attack_right"].CurrentFrame);
+                // Console.WriteLine(_animations["Attack_right"].FrameCount);
+                if (_lastDirection == "right")
+                {
+                    _animationManager.Play(_animations["Attack_right"]);
+                    if (_animations["Attack_right"].CurrentFrame == _animations["Attack_right"].FrameCount - 1)
+                    {
+                        isAttacking = false;
+                    }
+                }
+                else
+                {
+                    _animationManager.Play(_animations["Attack_left"]);
+                    if (_animations["Attack_left"].CurrentFrame == _animations["Attack_left"].FrameCount - 1)
+                    {
+                        isAttacking = false;
+                    }
+                }
+            }
+
         }
         public virtual void Die()
         {
@@ -177,6 +206,13 @@ namespace projet.Sprites
                     isGameOver = true;
             }
         }
+        public Sprite(Joueur j)
+        {
+            _joueur = j;
+            _animations = j.LoadAnimation;
+            _animationManager = new AnimationManager(_animations.First().Value);
+            _position = j.Co.VectorLocation;
+        }
         public Sprite(Dictionary<string, Animation> animations)
         {
             _animations = animations;
@@ -196,15 +232,18 @@ namespace projet.Sprites
 
                 if (!isDead)
                 {
-                    Move();
-
                     Attack();
 
-                    setAnimation();
+                    if (!isAttacking)
+                    {
+                        Move();
 
-                    Position += Velocity;
+                        setAnimation();
+
+                        Position += Velocity;
+                        _joueur.Co.VectorLocation = Position;
+                    }
                 }
-
             }
 
             Velocity = Vector2.Zero;

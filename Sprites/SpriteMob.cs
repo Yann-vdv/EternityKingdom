@@ -5,8 +5,9 @@ using System.Collections.Generic;
 using projet.Models;
 using projet.Managers;
 using System.Linq;
+using System;
 
-namespace projet.SpriteMobs
+namespace projet.Sprites
 {
     public class SpriteMob
     {
@@ -15,7 +16,10 @@ namespace projet.SpriteMobs
         protected Dictionary<string, Animation> _animations;
         protected Vector2 _position;
         protected Texture2D _texture;
+        protected Enemy _monstre;
         protected string _lastDirection = "right";
+        protected bool isGameOver = false;
+        protected bool isDead = false;
         #endregion
 
         #region Properties
@@ -37,146 +41,115 @@ namespace projet.SpriteMobs
         #endregion
 
         #region Method
-        public virtual void Draw(SpriteBatch SpriteMobBatch)
+        public virtual void Draw(SpriteBatch spriteBatch)
         {
             if (_texture != null)
-                SpriteMobBatch.Draw(_texture, Position, Color.White);
+                spriteBatch.Draw(_texture, Position, Color.White);
             else if (_animationManager != null)
-                _animationManager.Draw(SpriteMobBatch);
+                _animationManager.Draw(spriteBatch);
             else throw new System.Exception("il y a une erreur");
         }
         protected virtual void Move()
         {
-            if (Keyboard.GetState().IsKeyDown(Input.Up))
-            {
-                if (Keyboard.GetState().IsKeyDown(Input.Left))
-                {
-                    Velocity.X -= Speed;
-                }
-                else if (Keyboard.GetState().IsKeyDown(Input.Right))
-                {
-                    Velocity.X += Speed;
-                }
-                Velocity.Y -= Speed;
-            }
-            else if (Keyboard.GetState().IsKeyDown(Input.Down))
-            {
-                if (Keyboard.GetState().IsKeyDown(Input.Left))
-                {
-                    Velocity.X -= Speed;
-                }
-                else if (Keyboard.GetState().IsKeyDown(Input.Right))
-                {
-                    Velocity.X += Speed;
-                }
-                Velocity.Y += Speed;
-            }
-            else if (Keyboard.GetState().IsKeyDown(Input.Left))
-            {
-                if (Keyboard.GetState().IsKeyDown(Input.Up))
-                {
-                    Velocity.Y -= Speed;
-                }
-                else if (Keyboard.GetState().IsKeyDown(Input.Down))
-                {
-                    Velocity.Y += Speed;
-                }
-                Velocity.X -= Speed;
-                _lastDirection = "left";
-            }
-            else if (Keyboard.GetState().IsKeyDown(Input.Right))
-            {
-                if (Keyboard.GetState().IsKeyDown(Input.Up))
-                {
-                    Velocity.Y -= Speed;
-                }
-                else if (Keyboard.GetState().IsKeyDown(Input.Down))
-                {
-                    Velocity.Y += Speed;
-                }
-                Velocity.X += Speed;
-                _lastDirection = "right";
-            }
-            // else
-            // {
-            //     Velocity.Y = 0;
-            //     Velocity.X = 0;
-            // }
+
         }
         protected virtual void setAnimation()
         {
             if (Velocity.X > 0)
             {
-                _animationManager.Play(_animations["Walk_right"]);
+                _animationManager.Play(_animations[_monstre.Textures[TypeSprite.Walk_right].NomSprite]);
             }
             else if (Velocity.X < 0)
             {
-                _animationManager.Play(_animations["Walk_left"]);
+                _animationManager.Play(_animations[_monstre.Textures[TypeSprite.Walk_left].NomSprite]);
             }
             else if (Velocity.Y > 0 || Velocity.Y < 0)
             {
                 if (_lastDirection == "right")
                 {
-                    _animationManager.Play(_animations["Walk_right"]);
+                    _animationManager.Play(_animations[_monstre.Textures[TypeSprite.Walk_right].NomSprite]);
                 }
                 else
                 {
-                    _animationManager.Play(_animations["Walk_left"]);
+                    _animationManager.Play(_animations[_monstre.Textures[TypeSprite.Walk_left].NomSprite]);
                 }
             }
-            else if (Keyboard.GetState().IsKeyUp(Input.Space))
+            else
             {
                 if (_lastDirection == "right")
                 {
-                    _animationManager.Play(_animations["Walk_right"]);
+                    _animationManager.Play(_animations[_monstre.Textures[TypeSprite.Idle_right].NomSprite]);
                 }
                 else
                 {
-                    _animationManager.Play(_animations["Walk_left"]);
+                    _animationManager.Play(_animations[_monstre.Textures[TypeSprite.Idle_left].NomSprite]);
                 }
-                _animationManager.Stop();
+                // _animationManager.Stop();
             }
-
-            // else if (Velocity.Y < 0)
-            // {
-            //     _animationManager.Play(_animations[]);
-            // }
         }
         public virtual void Attack()
         {
-            if (Keyboard.GetState().IsKeyDown(Input.Space))
+            // Velocity = Vector2.Zero;
+            // if (_lastDirection == "right")
+            // {
+            //     _animationManager.Play(_animations["Attack_right"]);
+            // }
+            // else
+            // {
+            //     _animationManager.Play(_animations["Attack_left"]);
+            // }
+        }
+        public virtual void Die()
+        {
+            //Console.WriteLine("animatin : " + _animations["Dead_right"].Texture);
+            if (Position.X >= 400)
             {
+                isDead = true;
                 Velocity = Vector2.Zero;
                 if (_lastDirection == "right")
                 {
-                    _animationManager.Play(_animations["Attack_right"]);
+                    //for (int i = 0; i < _animations["Dead_right"].FrameCount; i++)
+                    _animationManager.Play(_animations[_monstre.Textures[TypeSprite.Dead_right].NomSprite]);
+
                 }
                 else
                 {
-                    _animationManager.Play(_animations["Attack_left"]);
+                    //for (int i = 0; i < _animations["Dead_left"].FrameCount; i++)
+                    _animationManager.Play(_animations[_monstre.Textures[TypeSprite.Dead_left].NomSprite]);
                 }
+                if (_animations[_monstre.Textures[TypeSprite.Dead_left].NomSprite].CurrentFrame == 12 || _animations[_monstre.Textures[TypeSprite.Dead_right].NomSprite].CurrentFrame == 12)
+                    isGameOver = true;
             }
         }
-        public SpriteMob(Dictionary<string, Animation> animations)
+        public SpriteMob(Enemy m)
         {
-            _animations = animations;
+            _monstre = m;
+            _animations = m.LoadAnimation;
             _animationManager = new AnimationManager(_animations.First().Value);
+            _position = m.Co.VectorLocation;
         }
-        public SpriteMob(Texture2D texture)
+        public virtual void Update(GameTime gameTime, List<SpriteMob> sprites)
         {
-            _texture = texture;
-        }
-        public virtual void Update(GameTime gameTime, List<SpriteMob> SpriteMobs)
-        {
-            Move();
+            if (!isGameOver)
+            {
+                Die();
 
-            Attack();
+                _animationManager.Update(gameTime);
 
-            setAnimation();
+                if (!isDead)
+                {
+                    Move();
 
-            _animationManager.Update(gameTime);
+                    Attack();
 
-            Position += Velocity;
+                    setAnimation();
+
+                    Position += Velocity;
+                    _monstre.Co.VectorLocation = Position;
+                }
+
+            }
+
             Velocity = Vector2.Zero;
         }
         #endregion

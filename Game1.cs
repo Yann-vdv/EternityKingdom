@@ -4,23 +4,31 @@ using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using projet.Sprites;
 using projet.Models;
+using System;
 namespace projet
 {
     public class Game1 : Game
     {
+        // a voir pour l'incorporer car faut le faire
+        //   https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/linq/query-syntax-and-method-syntax-in-linq
+
+        //  sa c bien pour match des class avec enfant parents
+        // https://docs.microsoft.com/en-us/dotnet/csharp/fundamentals/functional/pattern-matching
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private FunctionGame _FunctionGame = new FunctionGame();
         private GamePlayInfo _GamePlayInfo = new GamePlayInfo();
-        private List<Sprite> _Players;
+        private List<Sprite> _SpritePlayers;
+        private Joueur _player;
+        private List<SpriteMob> _SpriteEnemys;
         private gameState gs = gameState.gamePlay;
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-            // _graphics.PreferredBackBufferWidth = 1920;
-            // _graphics.PreferredBackBufferHeight = 1080;
+            _graphics.PreferredBackBufferWidth = 1920;
+            _graphics.PreferredBackBufferHeight = 1080;
             // _graphics.IsFullScreen = true;
             // _graphics.ApplyChanges();
         }
@@ -38,31 +46,32 @@ namespace projet
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _FunctionGame.SpawnEnemy(TypeMobs.Golem, 10, _GamePlayInfo);
             _GamePlayInfo._GameBackground = Content.Load<Texture2D>("grass");
-
-            var Player1 = new Dictionary<string, Animation>()
+            _player = _GamePlayInfo.J1;
+            var animTemp = new Dictionary<string, Animation>();
+            // à optimiser plus tard on peux charger plu
+            foreach (var t in _player.Textures)
             {
-                { "Walk_right", new Animation(Content.Load<Texture2D>("Golem01/Golem_01_Walking_right_001"), 17 ) },
-                { "Walk_left", new Animation(Content.Load<Texture2D>("Golem01/Golem_01_Walking_left_001"), 17 ) },
-                { "Attack_left", new Animation(Content.Load<Texture2D>("Golem01/Golem_01_Attacking_Left_000"), 12 ) },
-                { "Attack_right", new Animation(Content.Load<Texture2D>("Golem01/Golem_01_Attacking_Right_000"), 12 ) },
-                { "Dead_left", new Animation(Content.Load<Texture2D>("Golem01/Golem_01_Dying_Left_000"), 15 ) },
-                { "Dead_right", new Animation(Content.Load<Texture2D>("Golem01/Golem_01_Dying_Right_000"), 15 ) },
-                { "Idle_left", new Animation(Content.Load<Texture2D>("Golem01/Golem_01_Idle_Left_000"), 12 ) },
-                { "Idle_right", new Animation(Content.Load<Texture2D>("Golem01/Golem_01_Idle_Right_000"), 12 ) },
-            };
-            // var animations2 = new Dictionary<string, Animation>()
-            // {
-            //     { "Walk_right", new Animation(Content.Load<Texture2D>("Golem01/Golem_01_Walking_right_001"), 17 ) },
-            //     { "Walk_left", new Animation(Content.Load<Texture2D>("Golem01/Golem_01_Walking_left_001"), 17 ) },
-            //     { "Attack_left", new Animation(Content.Load<Texture2D>("Golem01/Golem_01_Attacking_Left_000"), 12 ) },
-            //     { "Attack_right", new Animation(Content.Load<Texture2D>("Golem01/Golem_01_Attacking_Right_000"), 12 ) },
-            // };
-
-            _Players = new List<Sprite>()
+                animTemp.Add(t.Value.NomSprite, new Animation(Content.Load<Texture2D>(t.Value.PathSprite), t.Value.NbFrame));
+            }
+            _player.LoadAnimation = animTemp;
+            _SpriteEnemys = new List<SpriteMob>();
+            foreach (var m in _GamePlayInfo.Enemys)
             {
-                new Sprite(Player1)
+                foreach (var t in m.Textures)
                 {
-                    Position = new Vector2(100,100),
+                    animTemp.Add(t.Value.NomSprite, new Animation(Content.Load<Texture2D>(t.Value.PathSprite), t.Value.NbFrame));
+                }
+
+                m.LoadAnimation = animTemp;
+                _SpriteEnemys.Add(new SpriteMob(m) { Position = m.Co.VectorLocation });
+            }
+
+
+            _SpritePlayers = new List<Sprite>()
+            {
+                new Sprite(_player)
+                {
+                    Position = _player.Co.VectorLocation,
                     Input = new input()
                     {
                         Up = Keys.Z,
@@ -71,19 +80,7 @@ namespace projet
                         Right = Keys.D,
                         Space = Keys.Space,
                     },
-                },
-                // new Sprite(animations2)
-                // {
-                //     Position = new Vector2(200,100),
-                //     Input = new input()
-                //     {
-                //         Up = Keys.Up,
-                //         Down = Keys.Down,
-                //         Left = Keys.Left,
-                //         Right = Keys.Right,
-                //         Space = Keys.RightShift,
-                //     },
-                // },
+                }
             };
 
             // TODO: use this.Content to load your game content here
@@ -91,6 +88,13 @@ namespace projet
 
         protected override void Update(GameTime gameTime)
         {
+            //// test colision a voir
+            _player.Colision.UpdateColision(_GamePlayInfo.Enemys);
+
+
+
+
+            //Console.WriteLine(_player.co.vectorLocation);
             // if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             //     Exit();
 
@@ -110,9 +114,15 @@ namespace projet
             // {
             //     _GamePlayInfo.j1.co.x += 1;
             // }
+            foreach (var enemySprite in _SpriteEnemys)
+                enemySprite.Update(gameTime, _SpriteEnemys);
 
-            foreach (var sprite in _Players)
-                sprite.Update(gameTime, _Players);
+            foreach (var sprite in _SpritePlayers)
+            {
+
+
+                sprite.Update(gameTime, _SpritePlayers);
+            }
 
             // TODO: Add your update logic here
 
@@ -145,8 +155,11 @@ namespace projet
             _spriteBatch.Begin();
             _spriteBatch.Draw(_GamePlayInfo._GameBackground, new Vector2(0, 0), Color.White);
             //_spriteBatch.Draw(_GamePlayInfo.j1.t2d, new Vector2(_GamePlayInfo.j1.co.x, _GamePlayInfo.j1.co.y), Color.White);
-
-            foreach (var sprite in _Players)
+            foreach (var enemySprite in _SpriteEnemys)
+            {
+                enemySprite.Draw(_spriteBatch);
+            }
+            foreach (var sprite in _SpritePlayers)
                 sprite.Draw(_spriteBatch);
             _spriteBatch.End();
         }
