@@ -19,7 +19,6 @@ namespace projet.Sprites
         protected Joueur _joueur;
         protected string _lastDirection = "right";
         protected bool isGameOver = false;
-        protected bool isDead = false;
         protected bool isAttacking = false;
         #endregion
 
@@ -159,6 +158,7 @@ namespace projet.Sprites
                 {
                     _animationManager.Play(_animations["Attack_left"]);
                 }
+
                 isAttacking = true;
             }
             else if (isAttacking)
@@ -170,6 +170,7 @@ namespace projet.Sprites
                     _animationManager.Play(_animations["Attack_right"]);
                     if (_animations["Attack_right"].CurrentFrame == _animations["Attack_right"].FrameCount - 1)
                     {
+                        _joueur.Attack();
                         isAttacking = false;
                     }
                 }
@@ -178,6 +179,7 @@ namespace projet.Sprites
                     _animationManager.Play(_animations["Attack_left"]);
                     if (_animations["Attack_left"].CurrentFrame == _animations["Attack_left"].FrameCount - 1)
                     {
+                        _joueur.Attack();
                         isAttacking = false;
                     }
                 }
@@ -187,9 +189,8 @@ namespace projet.Sprites
         public virtual void Die()
         {
             //Console.WriteLine("animatin : " + _animations["Dead_right"].Texture);
-            if (Position.X >= 400)
+            if (_joueur.IsDead)
             {
-                isDead = true;
                 Velocity = Vector2.Zero;
                 if (_lastDirection == "right")
                 {
@@ -230,12 +231,13 @@ namespace projet.Sprites
 
                 _animationManager.Update(gameTime);
 
-                if (!isDead)
+                if (!_joueur.IsDead)
                 {
                     Attack();
 
                     if (!isAttacking)
                     {
+                        _joueur.Colision.UpdateSelfCo(_joueur);
                         Move();
 
                         setAnimation();

@@ -27,10 +27,18 @@ namespace projet
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-            _graphics.PreferredBackBufferWidth = 1920;
-            _graphics.PreferredBackBufferHeight = 1080;
             // _graphics.IsFullScreen = true;
             // _graphics.ApplyChanges();
+
+            if (GraphicsDevice == null)
+            {
+                _graphics.ApplyChanges();
+            }
+            // Change the resolution to match your current desktop
+            _graphics.PreferredBackBufferWidth = GraphicsDevice.Adapter.CurrentDisplayMode.Width - GraphicsDevice.Adapter.CurrentDisplayMode.Width % 100;
+            _graphics.PreferredBackBufferHeight = GraphicsDevice.Adapter.CurrentDisplayMode.Height - GraphicsDevice.Adapter.CurrentDisplayMode.Height % 100;
+            Window.AllowUserResizing = false;
+            _graphics.ApplyChanges();
         }
 
 
@@ -43,6 +51,9 @@ namespace projet
 
         protected override void LoadContent()
         {
+
+
+
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _FunctionGame.SpawnEnemy(TypeMobs.Golem, 10, _GamePlayInfo);
             _GamePlayInfo._GameBackground = Content.Load<Texture2D>("grass");
@@ -65,7 +76,8 @@ namespace projet
                 m.LoadAnimation = animTemp;
                 _SpriteEnemys.Add(new SpriteMob(m) { Position = m.Co.VectorLocation });
             }
-
+            _player.Colision.Texture = new Texture2D(GraphicsDevice, 1, 1);
+            _player.Colision.Texture.SetData(new Color[] { Color.DarkSlateGray });
 
             _SpritePlayers = new List<Sprite>()
             {
@@ -83,6 +95,8 @@ namespace projet
                 }
             };
 
+
+
             // TODO: use this.Content to load your game content here
         }
 
@@ -90,10 +104,6 @@ namespace projet
         {
             //// test colision a voir
             _player.Colision.UpdateColision(_GamePlayInfo.Enemys);
-
-
-
-
             //Console.WriteLine(_player.co.vectorLocation);
             // if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             //     Exit();
@@ -119,8 +129,6 @@ namespace projet
 
             foreach (var sprite in _SpritePlayers)
             {
-
-
                 sprite.Update(gameTime, _SpritePlayers);
             }
 
@@ -153,14 +161,34 @@ namespace projet
         void DrawGamePlay()
         {
             _spriteBatch.Begin();
-            _spriteBatch.Draw(_GamePlayInfo._GameBackground, new Vector2(0, 0), Color.White);
-            //_spriteBatch.Draw(_GamePlayInfo.j1.t2d, new Vector2(_GamePlayInfo.j1.co.x, _GamePlayInfo.j1.co.y), Color.White);
+            // _spriteBatch.Draw(_GamePlayInfo._GameBackground, new Vector2(0, 0), Color.White);
+            // _spriteBatch.Draw(_GamePlayInfo._GameBackground,
+            //    new Rectangle(0, 0, GraphicsDevice.Adapter.CurrentDisplayMode.Width, GraphicsDevice.Adapter.CurrentDisplayMode.Height),
+            //    new Rectangle(0, 0, 512, 512),
+            //    Color.White);
+
+            var tileSize = 50;
+
+            for (var y = 0; y < GraphicsDevice.Adapter.CurrentDisplayMode.Height; y = y + tileSize)
+            {
+                for (var x = 0; x < GraphicsDevice.Adapter.CurrentDisplayMode.Width; x = x + tileSize)
+                {
+                    _GamePlayInfo.Regions.Add(new Region(new Vector2(x, y)));
+                    var sourceRectangle = new Rectangle(0, 0, 512, 512);
+                    var destinationRectangle = new Rectangle(x, y, tileSize, tileSize);
+
+                    _spriteBatch.Draw(_GamePlayInfo._GameBackground, destinationRectangle, sourceRectangle, Color.White);
+                }
+            }
+
             foreach (var enemySprite in _SpriteEnemys)
             {
                 enemySprite.Draw(_spriteBatch);
             }
             foreach (var sprite in _SpritePlayers)
                 sprite.Draw(_spriteBatch);
+
+            _spriteBatch.Draw(_player.Colision.Texture, new Rectangle((int)_player.Co.VectorLocation.X + 50, (int)_player.Co.VectorLocation.Y, 50, 120), Color.White);
             _spriteBatch.End();
         }
 

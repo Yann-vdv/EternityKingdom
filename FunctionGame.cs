@@ -26,11 +26,11 @@ public class FunctionGame
             }
 
             monstre.PvMax = 20;
-            monstre.Pv = 20;
-            monstre.Attack = 2;
+            monstre.Pv = 3;
+            monstre.Damage = 2;
             //gpf.Entity.Add(monstre);
             gpf.Enemys.Add(monstre);
-            lastCoo = new Coordonnee(lastCoo.VectorLocation.X + 100, lastCoo.VectorLocation.Y);
+            lastCoo = new Coordonnee(lastCoo.VectorLocation.X + 50, lastCoo.VectorLocation.Y);
         }
     }
 }

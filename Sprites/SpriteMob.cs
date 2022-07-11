@@ -19,7 +19,6 @@ namespace projet.Sprites
         protected Enemy _monstre;
         protected string _lastDirection = "right";
         protected bool isGameOver = false;
-        protected bool isDead = false;
         #endregion
 
         #region Properties
@@ -51,7 +50,10 @@ namespace projet.Sprites
         }
         protected virtual void Move()
         {
+            if (_monstre._Position.VectorLocation.X < _monstre.Target.VectorLocation.X && _monstre._Position.VectorLocation.Y < _monstre.Target.VectorLocation.Y)
+            {
 
+            };
         }
         protected virtual void setAnimation()
         {
@@ -102,9 +104,8 @@ namespace projet.Sprites
         public virtual void Die()
         {
             //Console.WriteLine("animatin : " + _animations["Dead_right"].Texture);
-            if (Position.X >= 400)
+            if (_monstre.IsDead)
             {
-                isDead = true;
                 Velocity = Vector2.Zero;
                 if (_lastDirection == "right")
                 {
@@ -136,7 +137,7 @@ namespace projet.Sprites
 
                 _animationManager.Update(gameTime);
 
-                if (!isDead)
+                if (!_monstre.IsDead)
                 {
                     Move();
 
