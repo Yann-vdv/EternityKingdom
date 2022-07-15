@@ -1,16 +1,27 @@
 using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 public class FunctionGame
 {
-    public FunctionGame()
+    public void SetSpawnRandom(GamePlayInfo gpf)
     {
+        Random rnd = new Random();
+        List<Coordonnee> l = new List<Coordonnee>();
+        l.Add(new Coordonnee(-10, -10));
+        l.Add(new Coordonnee(-10, 500));
+        l.Add(new Coordonnee(500, 500));
+        l.Add(new Coordonnee(500, -10));
+        int indexRandom = rnd.Next(l.Count);
+        SpawnEnemy(TypeMobs.Golem, (int)(rnd.NextDouble() * 10), gpf, l[indexRandom]);
+        SpawnEnemy(TypeMobs.Golem, (int)(rnd.NextDouble() * 10), gpf, l[rnd.Next(l.Count)]);
+        SpawnEnemy(TypeMobs.Golem, (int)(rnd.NextDouble() * 10), gpf, l[rnd.Next(l.Count)]);
+        SpawnEnemy(TypeMobs.Golem, (int)(rnd.NextDouble() * 10), gpf, l[rnd.Next(l.Count)]);
     }
-    public void SpawnEnemy(TypeMobs t, int q, GamePlayInfo gpf)
+    public void SpawnEnemy(TypeMobs t, int q, GamePlayInfo gpf, Coordonnee c)
     {
-        var lastCoo = new Coordonnee(0, 0);
         for (int i = 0; i < q; i++)
         {
-            Enemy monstre = new Enemy(lastCoo, t);
+            Enemy monstre = new Enemy(c, t);
             switch (t)
             {
                 case (TypeMobs.Golem):
@@ -28,9 +39,9 @@ public class FunctionGame
             monstre.PvMax = 20;
             monstre.Pv = 3;
             monstre.Damage = 2;
-            //gpf.Entity.Add(monstre);
-            gpf.Enemys.Add(monstre);
-            lastCoo = new Coordonnee(lastCoo.VectorLocation.X + 50, lastCoo.VectorLocation.Y);
+            monstre.SetTarget(gpf.J1);
+            gpf.Entity.Add(monstre);
+            c = new Coordonnee(c.VectorLocation.X + 50, c.VectorLocation.Y);
         }
     }
 }

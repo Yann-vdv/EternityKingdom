@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using System;
 public class Coordonnee
 {
     public Vector2 VectorLocation;
@@ -12,10 +13,26 @@ public class Coordonnee
     }
     public bool Ishigher(Coordonnee coord)
     {
-        return coord.VectorLocation.Y > VectorLocation.Y;
+        try
+        {
+            return coord.VectorLocation.Y > VectorLocation.Y;
+        }
+        catch (InvalidCastException e)
+        {
+            Console.WriteLine(e);
+            return false;
+        }
     }
     public bool IsWider(Coordonnee coord)
     {
-        return coord.VectorLocation.X > VectorLocation.X;
+        try
+        {
+            return coord.VectorLocation.X > VectorLocation.X;
+        }
+        catch (InvalidCastException e)
+        {
+            Console.WriteLine(e);
+            return false;
+        }
     }
 }

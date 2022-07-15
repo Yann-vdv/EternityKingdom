@@ -1,17 +1,28 @@
 using Microsoft.Xna.Framework.Graphics;
-
 public class Structure : Entity
 {
-    public string name;
-    public int hp;
-    public int maxHp;
-    public Texture2D texture;
+    public TypeStructure Type;
+    public Texture2D Texture;
+    public int OriginalWidth;
+    public int OriginalHeight;
 
-    public Structure(string name, int hp, int maxHp, Texture2D texture)
+    public Structure(TypeStructure type, int hp, int maxHp, Texture2D texture, int originalWidth, int originalHeight, Coordonnee co)
     {
-        this.name = name;
-        this.hp = hp;
-        this.maxHp = maxHp;
-        this.texture = texture;
+        this.Pv = hp;
+        this.PvMax = maxHp;
+        this.Texture = texture;
+        this.Type = type;
+        this.OriginalWidth = originalWidth;
+        this.OriginalHeight = originalHeight;
+        this.Co = co;
+    }
+    public Structure(TypeStructure type, int hp, int maxHp, Texture2D texture, int originalWidth, int originalHeight)
+    {
+        this.Pv = hp;
+        this.PvMax = maxHp;
+        this.Texture = texture;
+        this.Type = type;
+        this.OriginalWidth = originalWidth;
+        this.OriginalHeight = originalHeight;
     }
 }

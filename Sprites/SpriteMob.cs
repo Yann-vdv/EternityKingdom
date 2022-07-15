@@ -16,7 +16,9 @@ namespace projet.Sprites
         protected Dictionary<string, Animation> _animations;
         protected Vector2 _position;
         protected Texture2D _texture;
+        public GamePlayInfo Gpi;
         protected Enemy _monstre;
+        private bool isAttacking;
         protected string _lastDirection = "right";
         protected bool isGameOver = false;
         #endregion
@@ -35,7 +37,7 @@ namespace projet.Sprites
                 }
             }
         }
-        public float Speed = 1f;
+        public float Speed = 0.3f;
         public Vector2 Velocity;
         #endregion
 
@@ -50,10 +52,60 @@ namespace projet.Sprites
         }
         protected virtual void Move()
         {
-            if (_monstre._Position.VectorLocation.X < _monstre.Target.VectorLocation.X && _monstre._Position.VectorLocation.Y < _monstre.Target.VectorLocation.Y)
+            if (_monstre.Target.Co.VectorLocation.X < _monstre.Co.VectorLocation.X)
             {
-
-            };
+                Velocity.X -= Speed;
+                _lastDirection = "left";
+                if (_monstre.Target.Co.VectorLocation.Y > _monstre.Co.VectorLocation.Y)
+                {
+                    Velocity.Y += Speed;
+                }
+                if (_monstre.Target.Co.VectorLocation.Y < _monstre.Co.VectorLocation.Y)
+                {
+                    Velocity.Y -= Speed;
+                }
+            }
+            else if (_monstre.Target.Co.VectorLocation.X >= _monstre.Co.VectorLocation.X)
+            {
+                Velocity.X += Speed;
+                _lastDirection = "right";
+                if (_monstre.Target.Co.VectorLocation.Y > _monstre.Co.VectorLocation.Y)
+                {
+                    Velocity.Y += Speed;
+                }
+                if (_monstre.Target.Co.VectorLocation.Y < _monstre.Co.VectorLocation.Y)
+                {
+                    Velocity.Y -= Speed;
+                }
+            }
+            else if (_monstre.Target.Co.VectorLocation.Y > _monstre.Co.VectorLocation.Y)
+            {
+                Velocity.Y += Speed;
+                if (_monstre.Target.Co.VectorLocation.X < _monstre.Co.VectorLocation.X)
+                {
+                    Velocity.X -= Speed;
+                    _lastDirection = "left";
+                }
+                if (_monstre.Target.Co.VectorLocation.X >= _monstre.Co.VectorLocation.X)
+                {
+                    Velocity.X += Speed;
+                    _lastDirection = "right";
+                }
+            }
+            else if (_monstre.Target.Co.VectorLocation.Y < _monstre.Co.VectorLocation.Y)
+            {
+                Velocity.Y -= Speed;
+                if (_monstre.Target.Co.VectorLocation.X < _monstre.Co.VectorLocation.X)
+                {
+                    Velocity.X -= Speed;
+                    _lastDirection = "left";
+                }
+                if (_monstre.Target.Co.VectorLocation.X >= _monstre.Co.VectorLocation.X)
+                {
+                    Velocity.X += Speed;
+                    _lastDirection = "right";
+                }
+            }
         }
         protected virtual void setAnimation()
         {
@@ -86,36 +138,62 @@ namespace projet.Sprites
                 {
                     _animationManager.Play(_animations[_monstre.Textures[TypeSprite.Idle_left].NomSprite]);
                 }
-                // _animationManager.Stop();
             }
         }
         public virtual void Attack()
         {
-            // Velocity = Vector2.Zero;
-            // if (_lastDirection == "right")
-            // {
-            //     _animationManager.Play(_animations["Attack_right"]);
-            // }
-            // else
-            // {
-            //     _animationManager.Play(_animations["Attack_left"]);
-            // }
+            if (_monstre.Colision.IsIn(_monstre.Target.Co))
+            {
+                if (!isAttacking)
+                {
+                    Velocity = Vector2.Zero;
+                    if (_lastDirection == "right")
+                    {
+                        _animationManager.Play(_animations[_monstre.Textures[TypeSprite.Attack_right].NomSprite]);
+                    }
+                    else
+                    {
+                        _animationManager.Play(_animations[_monstre.Textures[TypeSprite.Attack_left].NomSprite]);
+                    }
+                    isAttacking = true;
+                }
+                else
+                {
+                    if (_lastDirection == "right")
+                    {
+                        if ((_animations[_monstre.Textures[TypeSprite.Attack_right].NomSprite].CurrentFrame + 1) >= _animations[_monstre.Textures[TypeSprite.Attack_right].NomSprite].FrameCount - 1)
+                        {
+                            _monstre.Attack(_monstre, Gpi);
+                            isAttacking = false;
+                        }
+                    }
+                    else
+                    {
+                        if ((_animations[_monstre.Textures[TypeSprite.Attack_left].NomSprite].CurrentFrame + 1) >= _animations[_monstre.Textures[TypeSprite.Attack_left].NomSprite].FrameCount - 1)
+                        {
+                            _monstre.Attack(_monstre, Gpi);
+                            isAttacking = false;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                isAttacking = false;
+            }
         }
         public virtual void Die()
         {
-            //Console.WriteLine("animatin : " + _animations["Dead_right"].Texture);
             if (_monstre.IsDead)
             {
                 Velocity = Vector2.Zero;
                 if (_lastDirection == "right")
                 {
-                    //for (int i = 0; i < _animations["Dead_right"].FrameCount; i++)
                     _animationManager.Play(_animations[_monstre.Textures[TypeSprite.Dead_right].NomSprite]);
 
                 }
                 else
                 {
-                    //for (int i = 0; i < _animations["Dead_left"].FrameCount; i++)
                     _animationManager.Play(_animations[_monstre.Textures[TypeSprite.Dead_left].NomSprite]);
                 }
                 if (_animations[_monstre.Textures[TypeSprite.Dead_left].NomSprite].CurrentFrame == 12 || _animations[_monstre.Textures[TypeSprite.Dead_right].NomSprite].CurrentFrame == 12)
@@ -129,7 +207,7 @@ namespace projet.Sprites
             _animationManager = new AnimationManager(_animations.First().Value);
             _position = m.Co.VectorLocation;
         }
-        public virtual void Update(GameTime gameTime, List<SpriteMob> sprites)
+        public virtual void Update(GameTime gameTime, List<SpriteMob> sprites, GamePlayInfo gpi)
         {
             if (!isGameOver)
             {
@@ -139,16 +217,20 @@ namespace projet.Sprites
 
                 if (!_monstre.IsDead)
                 {
-                    Move();
+                    if (!isAttacking)
+                    {
+                        Move();
+                        setAnimation();
+                        Position += Velocity;
+                        _monstre.Co.VectorLocation = Position;
+                    }
 
                     Attack();
 
-                    setAnimation();
-
-                    Position += Velocity;
-                    _monstre.Co.VectorLocation = Position;
                 }
 
+                _monstre.Colision.UpdateSelfCo(_monstre);
+                _monstre.UpdateTarget(gpi);
             }
 
             Velocity = Vector2.Zero;

@@ -11,15 +11,15 @@ public class Colision
     private Coordonnee bottomRightCorner { get; set; }
     public Texture2D Texture { get; set; }
 
-    private List<Enemy> inColision { get; set; } = new List<Enemy>();
+    private List<Entity> inColision { get; set; } = new List<Entity>();
     private int selfHeight { get; set; }
     private int selfWitdh { get; set; }
 
-    public bool IsHere(Enemy e)
+    public bool IsHere(Entity e)
     {
         return inColision.Contains(e);
     }
-    public Colision(int height, int witdh, Joueur j)
+    public Colision(int height, int witdh, Characters j)
     {
         topLeftCorner = new Coordonnee(j.Co.VectorLocation.X - witdh, j.Co.VectorLocation.Y + height);
         topRightCorner = new Coordonnee(j.Co.VectorLocation.X + witdh, j.Co.VectorLocation.Y + height);
@@ -28,14 +28,14 @@ public class Colision
         selfWitdh = witdh;
         selfHeight = height;
     }
-    public void UpdateSelfCo(Joueur j)
+    public void UpdateSelfCo(Characters j)
     {
         topLeftCorner = new Coordonnee(j.Co.VectorLocation.X - selfWitdh, j.Co.VectorLocation.Y + selfHeight);
         topRightCorner = new Coordonnee(j.Co.VectorLocation.X + selfWitdh, j.Co.VectorLocation.Y + selfHeight);
         bottomLeftCorner = new Coordonnee(j.Co.VectorLocation.X - selfWitdh, j.Co.VectorLocation.Y - selfHeight);
         bottomRightCorner = new Coordonnee(j.Co.VectorLocation.X + selfWitdh, j.Co.VectorLocation.Y - selfHeight);
     }
-    private bool isOut(Coordonnee coord)
+    public bool IsOut(Coordonnee coord)
     {
         var res = false;
         if (topLeftCorner.Ishigher(coord) || !topLeftCorner.IsWider(coord))
@@ -69,8 +69,10 @@ public class Colision
         }
         return res;
     }
-    private bool isIn(Coordonnee coord)
+    public bool IsIn(Coordonnee coord)
     {
+
+
         var res = false;
         if (!topLeftCorner.Ishigher(coord) &&
             topLeftCorner.IsWider(coord) &&
@@ -85,84 +87,154 @@ public class Colision
             //   Console.WriteLine("in");
             res = true;
         }
+
+
         return res;
     }
-    public List<Enemy> WhoIn()
+    public List<Entity> WhoIn()
     {
         return inColision;
     }
-    public void GoIn(Enemy entity)
+    public void GoIn(Entity entity)
     {
         inColision.Add(entity);
     }
-    public void GoOut(Enemy entity)
+    public void GoOut(Entity entity)
     {
         inColision.Remove(entity);
     }
-    public void UpdateColision(List<Enemy> allEntity)
+    public void UpdateColision(List<Entity> allEntity)
     {
-        if (inColision.Count != 0)
+
+        List<Entity> aSup = new List<Entity>();
+        foreach (Entity entityIn in inColision)
         {
-            foreach (Enemy e in inColision)
+            switch (entityIn)
             {
-                Console.WriteLine(e.Id);
+                case (Enemy enemy):
+                    if (IsOut(enemy.Co))
+                    {
+                        //  Console.WriteLine("je suis sortie");
+                        aSup.Add(enemy);
+
+                    }
+                    break;
+                case (Joueur j):
+                    if (IsOut(j.Co))
+                    {
+                        //  Console.WriteLine("je suis sortie");
+                        aSup.Add(j);
+
+                    }
+                    break;
+                case (Structure s):
+                    if (IsOut(s.Co))
+                    {
+                        aSup.Add(s);
+                    }
+                    break;
+                    //    default:
+                    //        Console.WriteLine(entityIn);
+                    //       break;
             }
         }
-        try
+        foreach (Entity entityInsup in aSup)
         {
-            List<Enemy> aSup = new List<Enemy>();
-            foreach (Enemy entityIn in inColision)
+            switch (entityInsup)
             {
-                switch (entityIn)
-                {
-                    case (Enemy enemy):
-                        if (isOut(enemy.Co))
-                        {
-                            //  Console.WriteLine("je suis sortie");
-                            aSup.Add(entityIn);
-
-                        }
-                        break;
-                }
+                case (Enemy enemy):
+                    GoOut(enemy);
+                    break;
+                case (Joueur j):
+                    GoOut(j);
+                    break;
+                case (Structure s):
+                    GoOut(s);
+                    break;
+                    //      default:
+                    //          Console.WriteLine(entityInsup);
+                    //         break;
             }
-            foreach (Enemy entityInsup in aSup)
+        }
+        foreach (Entity entityCurrent in allEntity)
+        {
+            switch (entityCurrent)
             {
-                switch (entityInsup)
-                {
-                    case (Enemy enemy):
-                        GoOut(entityInsup);
-                        break;
-                }
-            }
-            foreach (Enemy entityCurrent in allEntity)
-            {
-                switch (entityCurrent)
-                {
-                    case (Enemy enemy):
-                        if (isIn(enemy.Co))
+                case (Enemy enemy):
+                    if (IsIn(enemy.Co))
+                    {
+                        bool exist = false;
+                        foreach (Entity entity in inColision)
                         {
-                            bool exist = false;
-                            foreach (Enemy entity in inColision)
+                            if (entity is Enemy)
                             {
                                 if (entity == entityCurrent)
                                 {
                                     exist = true;
                                 }
                             }
-                            if (!exist)
+                        }
+                        if (!exist)
+                        {
+                            //  Console.WriteLine("je suis rentrer");
+                            GoIn(entityCurrent);
+                        }
+                    }
+                    break;
+                case (Joueur j):
+                    if (IsIn(j.Co))
+                    {
+                        bool existjouer = false;
+                        foreach (Entity entity in inColision)
+                        {
+                            if (entity is Joueur)
                             {
-                                //  Console.WriteLine("je suis rentrer");
-                                GoIn(entityCurrent);
+                                if (entity == j)
+                                {
+                                    existjouer = true;
+                                }
                             }
                         }
-                        break;
-                }
+                        if (!existjouer)
+                        {
+                            //  Console.WriteLine("je suis rentrer");
+                            GoIn(j);
+                        }
+                    }
+                    break;
+                    /*    case (Structure r):
+                            if (r.Type != TypeStructure.castle)
+                            {
+                                if (IsIn(r.Co))
+                                {
+                                    bool existStructure = false;
+                                    foreach (Entity entity in inColision)
+                                    {
+                                        if (entity is Structure)
+                                        {
+                                            if (entity == r)
+                                            {
+                                                existStructure = true;
+                                            }
+                                        }
+                                    }
+                                    if (!existStructure)
+                                    {
+                                        //  Console.WriteLine("je suis rentrer");
+
+                                        GoIn(r);
+
+
+                                    }
+                                }
+                            }
+                            break;*/
+                    //        default:
+                    //             Console.WriteLine(entityCurrent);
+                    //                break;
             }
         }
-        catch (Exception e)
-        {
-            Console.WriteLine(e.StackTrace);
-        }
+
 
 
     }

@@ -2,7 +2,8 @@ public enum gameState
 {
     mainMenu,
     gamePlay,
-    gameOver
+    gameOver,
+    score
 }
 public enum TypeMobs
 {
@@ -20,4 +21,11 @@ public enum TypeSprite
     Dead_right,
     Idle_left,
     Idle_right
+}
+public enum TypeStructure
+{
+    plain,
+    mine,
+    castle,
+    steack,
 }
